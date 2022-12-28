@@ -109,6 +109,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       child: Image.asset("images/register.jpg"),
                     ),
 
+
+                    const Text("Kexim Bank",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 26,
+                      ),
+                    ),
+
                     //signup screen sign-up form
 
                     Padding(

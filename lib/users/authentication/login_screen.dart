@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:developer';
 
 import 'package:clothes/users/authentication/signup_screen.dart';
+import 'package:clothes/users/fragments/Dashboard_of_fragments.dart';
+import 'package:clothes/users/userPreferences/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -25,23 +28,28 @@ class _LoginScreenState extends State<LoginScreen> {
   loginUserNow() async {
 
     try{
+
       var res = await http.post(
         Uri.parse(API.login),
         body: {
-          'email':emailController.text.trim(),
-          'password':passwordController.text.trim(),
+          'user_email':emailController.text.trim(),
+          'user_password':passwordController.text.trim(),
         },
       );
-
       if(res.statusCode == 200){
         var result = jsonDecode(res.body);
 
         if(result['success']==true){
 
           Fluttertoast.showToast( msg: 'Login Successfully');
-
-          User userInfo = User.fromJson(result['userData']);
-
+        
+          User userInfo = User.fromJson(result["userData"]);
+          RememberUserPrefs.storeUserInfo(userInfo);
+        //  Get.to(DashboardOfFragments())
+          print(result);
+          Future.delayed(const Duration(microseconds: 2000),(){
+            Get.to(DashboardOfFragments());
+          });
         }else{
           Fluttertoast.showToast( msg: 'Error in login');
 
@@ -95,7 +103,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             padding: const EdgeInsets.fromLTRB(30,30,30,8),
                             child: Column(
                               children: [
-
+                                const Text("Kexim",
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 26,
+                                  ),
+                                ),
                                 //this is our form with email password details
                                 Form(
                                   key: formKey,
@@ -225,7 +238,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                         borderRadius: BorderRadius.circular(30),
                                         child: InkWell(
                                           onTap: (){
-                                            loginUserNow();
+
+                                            if(formKey.currentState!.validate()){
+
+                                              loginUserNow();
+                                            }
 
                                           },
                                           borderRadius: BorderRadius.circular(30),
