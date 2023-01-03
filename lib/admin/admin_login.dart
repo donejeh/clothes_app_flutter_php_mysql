@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:developer';
 
-import 'package:clothes/admin/admin_login.dart';
+import 'package:clothes/admin/admin_upload_items.dart';
+import 'package:clothes/users/authentication/login_screen.dart';
 import 'package:clothes/users/authentication/signup_screen.dart';
 import 'package:clothes/users/fragments/Dashboard_of_fragments.dart';
 import 'package:clothes/users/userPreferences/user_preferences.dart';
@@ -13,52 +14,49 @@ import 'package:http/http.dart' as http;
 import 'package:clothes/api/api_connect.dart';
 import 'package:clothes/users/model/user.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class AdminLoginScreen extends StatefulWidget {
+  const AdminLoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<AdminLoginScreen> createState() => _AdminLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _AdminLoginScreenState extends State<AdminLoginScreen> {
   var formKey = GlobalKey<FormState>();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var isObsecure = true.obs;
 
-  loginUserNow() async {
+  loginAdminNow() async {
 
     try{
 
       var res = await http.post(
-        Uri.parse(API.login),
+        Uri.parse(API.adminLogin),
         body: {
-          'user_email':emailController.text.trim(),
-          'user_password':passwordController.text.trim(),
+          'admin_email':emailController.text.trim(),
+          'admin_password':passwordController.text.trim(),
         },
       );
+
       if(res.statusCode == 200){
         var result = jsonDecode(res.body);
 
         if(result['success']==true){
 
           Fluttertoast.showToast( msg: 'Login Successfully');
-        
-          User userInfo = User.fromJson(result["userData"]);
-          RememberUserPrefs.storeUserInfo(userInfo);
-        //  Get.to(DashboardOfFragments())
-          print(result);
+
           Future.delayed(const Duration(microseconds: 2000),(){
-            Get.to(DashboardOfFragments());
+            Get.to(AdminUploadItemsScreen());
           });
         }else{
-          Fluttertoast.showToast( msg: 'Error in login');
+          Fluttertoast.showToast( msg: 'Username or password is incorrect');
 
         }
       }
 
-      }catch(e){
-     // log(e.toString());
+    }catch(e){
+      // log(e.toString());
     }
 
   }
@@ -80,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       height: 285,
-                      child: Image.asset("images/login.jpg"),
+                      child: Image.asset("images/admin.jpg"),
                     ),
 
                     //login screen sign-in form
@@ -122,18 +120,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ? "PLease email addesss"
                                             : null,
                                         decoration: InputDecoration(
-                                            prefixIcon: const Icon(
-                                              Icons.email,
-                                              color: Colors.black,
+                                          prefixIcon: const Icon(
+                                            Icons.email,
+                                            color: Colors.black,
+                                          ),
+                                          hintText: "Email ...",
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white,
                                             ),
-                                            hintText: "Email ...",
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(30),
-                                                borderSide: const BorderSide(
-                                                  color: Colors.white,
-                                                ),
-                                            ),
+                                          ),
                                           enabledBorder: OutlineInputBorder(
                                             borderRadius:
                                             BorderRadius.circular(30),
@@ -156,80 +154,80 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ),
                                           ),
                                           contentPadding: const EdgeInsets.symmetric(
-                                            horizontal: 14,
-                                            vertical: 6
+                                              horizontal: 14,
+                                              vertical: 6
                                           ),
                                           fillColor: Colors.white,
                                           filled: true,
                                         ),
                                       ),
 
-                                     const SizedBox(height: 18,),
+                                      const SizedBox(height: 18,),
 
-                                     // for password text field
+                                      // for password text field
 
-                                     Obx(() =>
-                                         TextFormField(
-                                           controller: passwordController,
-                                           obscureText: isObsecure.value,
-                                           validator: (val) => val == ""
-                                               ? "Please enter password"
-                                               : null,
-                                           decoration: InputDecoration(
-                                             prefixIcon: const Icon(
-                                               Icons.vpn_key_sharp,
-                                               color: Colors.black,
-                                             ),
-                                             suffixIcon: Obx(
-                                                   () => GestureDetector(
-                                                 onTap: (){
-                                                   isObsecure.value = !isObsecure.value;
-                                                 },
-                                                 child: Icon(
-                                                   isObsecure.value ? Icons.visibility_off : Icons.visibility,
-                                                   color: Colors.black,
-                                                 ),
-                                               ),
-                                             ),
-                                             hintText: "Password ...",
-                                             border: OutlineInputBorder(
-                                               borderRadius:
-                                               BorderRadius.circular(30),
-                                               borderSide: const BorderSide(
-                                                 color: Colors.white,
-                                               ),
-                                             ),
-                                             enabledBorder: OutlineInputBorder(
-                                               borderRadius:
-                                               BorderRadius.circular(30),
-                                               borderSide: const BorderSide(
-                                                 color: Colors.white,
-                                               ),
-                                             ),
-                                             focusedBorder: OutlineInputBorder(
-                                               borderRadius:
-                                               BorderRadius.circular(30),
-                                               borderSide: const BorderSide(
-                                                 color: Colors.white,
-                                               ),
-                                             ),
-                                             disabledBorder: OutlineInputBorder(
-                                               borderRadius:
-                                               BorderRadius.circular(30),
-                                               borderSide: const BorderSide(
-                                                 color: Colors.white,
-                                               ),
-                                             ),
-                                             contentPadding: const EdgeInsets.symmetric(
-                                                 horizontal: 14,
-                                                 vertical: 6
-                                             ),
-                                             fillColor: Colors.white,
-                                             filled: true,
-                                           ),
-                                         ),
+                                      Obx(() =>
+                                          TextFormField(
+                                            controller: passwordController,
+                                            obscureText: isObsecure.value,
+                                            validator: (val) => val == ""
+                                                ? "Please enter password"
+                                                : null,
+                                            decoration: InputDecoration(
+                                              prefixIcon: const Icon(
+                                                Icons.vpn_key_sharp,
+                                                color: Colors.black,
+                                              ),
+                                              suffixIcon: Obx(
+                                                    () => GestureDetector(
+                                                  onTap: (){
+                                                    isObsecure.value = !isObsecure.value;
+                                                  },
+                                                  child: Icon(
+                                                    isObsecure.value ? Icons.visibility_off : Icons.visibility,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                              hintText: "Password ...",
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(30),
+                                                borderSide: const BorderSide(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(30),
+                                                borderSide: const BorderSide(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(30),
+                                                borderSide: const BorderSide(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              disabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(30),
+                                                borderSide: const BorderSide(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              contentPadding: const EdgeInsets.symmetric(
+                                                  horizontal: 14,
+                                                  vertical: 6
+                                              ),
+                                              fillColor: Colors.white,
+                                              filled: true,
+                                            ),
+                                          ),
 
-                                     ),
+                                      ),
 
                                       const SizedBox(height: 18,),
 
@@ -242,7 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                             if(formKey.currentState!.validate()){
 
-                                              loginUserNow();
+                                              loginAdminNow();
                                             }
 
                                           },
@@ -263,56 +261,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       )
                                     ],
-                         ),
-                                ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                                // dont have account button form here
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-
-                                    const Text(
-                                      "Dont't have an Account?",
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Get.to(SignupScreen()
-                                        );
-
-                                    },
-                                      child: const Text(
-                                      "Register here",
-                                      style: TextStyle(
-                                        color: Colors.purpleAccent,
-                                      ),
-                                    ),
-                                    ),
-                                  ],
-                                ),
-
-                                const Text(
-                                  "Or",
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 16,
                                   ),
                                 ),
-                                // admin row
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                // i am not an admin
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
 
                                     const Text(
-                                      "Are you an Admin?",
+                                      "i am not an admin?",
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                      Get.to(AdminLoginScreen());
+                                        Get.to(LoginScreen()
+                                        );
+
                                       },
                                       child: const Text(
-                                        "Click here",
+                                        "Register here",
                                         style: TextStyle(
                                           color: Colors.purpleAccent,
                                         ),
