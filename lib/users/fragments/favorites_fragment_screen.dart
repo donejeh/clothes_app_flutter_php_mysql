@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FavoritesFragmentScreen extends StatelessWidget {
-  const FavoritesFragmentScreen({Key? key}) : super(key: key);
+   FavoritesFragmentScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

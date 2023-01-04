@@ -199,14 +199,32 @@ import 'package:http/http.dart' as http;
                 Icons.clear
               ),
               onPressed: () {
-                Get.to(AdminLoginScreen());
+                setState(() {
+                  pickedImageXFile =null;
+                  nameController.clear();
+                  priceController.clear();
+                  tagsController.clear();
+                  colorController.clear();
+                  sizeController.clear();
+                  descriptionController.clear();
+                  ratingController.clear();
+
+                });
+                Get.to(AdminUploadItemsScreen());
                 //Get.to(defaultScreen());
               },
             ),
             actions: [
               TextButton(
                   onPressed: (){
-                    Get.to(AdminLoginScreen());
+
+                    Fluttertoast.showToast( msg: "Uploading items....");
+
+                    if(formKey.currentState!.validate()) {
+                      Fluttertoast.showToast(msg: "Uploading items....");
+
+                      uploadItemImage();
+                    }
 
                   },
                   child: const Text(
@@ -734,6 +752,20 @@ import 'package:http/http.dart' as http;
 
             if(result['success'] == true){
               Fluttertoast.showToast( msg: result['message']);
+
+              setState(() {
+                pickedImageXFile =null;
+                nameController.clear();
+                priceController.clear();
+                tagsController.clear();
+                colorController.clear();
+                sizeController.clear();
+                descriptionController.clear();
+                ratingController.clear();
+
+              });
+              
+              Get.to(AdminUploadItemsScreen());
             }else{
               Fluttertoast.showToast( msg: result['message']);
             }

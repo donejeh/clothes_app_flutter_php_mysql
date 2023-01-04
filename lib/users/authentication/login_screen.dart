@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:clothes/admin/admin_login.dart';
 import 'package:clothes/users/authentication/signup_screen.dart';
-import 'package:clothes/users/fragments/Dashboard_of_fragments.dart';
+import 'package:clothes/users/fragments/dashboard_of_fragments.dart';
 import 'package:clothes/users/userPreferences/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';

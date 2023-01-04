@@ -7,7 +7,8 @@ import 'package:get/get.dart';
 class ProfileFragmentScreen extends StatelessWidget {
 
   final CurrentUser _currentUser = Get.put(CurrentUser());
-//  const ProfileFragmentScreen({Key? key}) : super(key: key);
+
+  ProfileFragmentScreen({Key? key}) : super(key: key);
 
   signOurUser() async{
    var resultResponse =  await Get.dialog(
@@ -94,7 +95,7 @@ class ProfileFragmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(32),
+      padding: const EdgeInsets.all(32),
       children: [
         Center(
           child: Image.asset(

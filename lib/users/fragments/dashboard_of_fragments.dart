@@ -9,13 +9,13 @@ import 'order_fragment_screen.dart';
 
 class DashboardOfFragments extends StatelessWidget {
 
-  //const DashboardOfFragments({Key? key}) : super(key: key);
+   DashboardOfFragments({Key? key}) : super(key: key);
 
   final CurrentUser _rememberCurrentUser = Get.put(CurrentUser());
   final List<Widget> _fragmentScreens = [
-    const HomeFragmentScreen(),
-    const FavoritesFragmentScreen(),
-    const OrderFragmentScreen(),
+     HomeFragmentScreen(),
+     FavoritesFragmentScreen(),
+     OrderFragmentScreen(),
     ProfileFragmentScreen(),
   ];
 
@@ -44,7 +44,6 @@ class DashboardOfFragments extends StatelessWidget {
 
   final RxInt _indexNumber = 0.obs;
 
-  DashboardOfFragments({super.key});
   @override
   Widget build(BuildContext context) {
 
