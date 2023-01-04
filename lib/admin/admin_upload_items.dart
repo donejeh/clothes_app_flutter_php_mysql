@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:clothes/admin/admin_login.dart';
+import 'package:clothes/api/api_connect.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
     
     class AdminUploadItemsScreen extends StatefulWidget {
        const AdminUploadItemsScreen({Key? key}) : super(key: key);
@@ -168,9 +173,53 @@ import 'package:image_picker/image_picker.dart';
       );
     }
 
+    // uploaditemsForm Screen method
     Widget uploadItemFormScreen(){
         return Scaffold(
           backgroundColor: Colors.black,
+          appBar: AppBar(
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.black54,
+                    Colors.deepPurple
+                  ],
+                ),
+              ),
+
+            ),
+            automaticallyImplyLeading: false,
+            title: const Text(
+              "Upload Form"
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: const Icon(
+                Icons.clear
+              ),
+              onPressed: () {
+                Get.to(AdminLoginScreen());
+                //Get.to(defaultScreen());
+              },
+            ),
+            actions: [
+              TextButton(
+                  onPressed: (){
+                    Get.to(AdminLoginScreen());
+
+                  },
+                  child: const Text(
+                    "Done",
+                    style: TextStyle(
+                      color: Colors.green
+                    ),
+                  ),
+
+              )
+            ],
+          ),
+
           body: ListView(
             children: [
 
@@ -583,6 +632,9 @@ import 'package:image_picker/image_picker.dart';
 
                                       if(formKey.currentState!.validate()){
 
+                                        Fluttertoast.showToast( msg: "Uploading items....");
+
+                                        uploadItemImage();
                                       }
 
                                     },
@@ -617,6 +669,80 @@ import 'package:image_picker/image_picker.dart';
           ),
         );
     }
+
+      //upload image to img
+      uploadItemImage() async{
+       var requestImgurApi = http.MultipartRequest(
+          "POST",
+            Uri.parse(API.imgurURL)
+        );
+
+       String imageName = DateTime.now().microsecondsSinceEpoch.toString();
+       requestImgurApi.fields['title'] = imageName;
+       requestImgurApi.headers['Authorization'] = API.clientImgurID;
+
+       var imageFile = await http.MultipartFile.fromPath(
+           'image',
+           pickedImageXFile!.path,
+           filename: imageName,
+       );
+
+       requestImgurApi.files.add(imageFile);
+       var responseFromImgurApi =  await requestImgurApi.send();
+
+      var responseDataFromImgurApi = await responseFromImgurApi.stream.bytesToString();
+
+      // var responseDataFromImgurApi = await responseFromImgurApi.stream.toBytes();
+      // var resultFromImgurApi = String.fromCharCode(responseDataFromImgurApi);
+
+      // print("Result:: ");
+      // print(responseDataFromImgurApi);
+
+      Map<String, dynamic> jsonResponse = jsonDecode(responseDataFromImgurApi);
+      imageLink = (jsonResponse["data"]["link"]).toString();
+      String deletehash = (jsonResponse["data"]["deletehash"]).toString();
+
+      saveItemInfo();
+
+      }
+
+
+      //save items to database
+      saveItemInfo() async {
+
+       List<String> tagList =  tagsController.text.split(',');
+       List<String> sizeList =  sizeController.text.split(',');
+       List<String> colorList =  colorController.text.split(',');
+
+        try{
+          var res = await http.post(
+            Uri.parse(API.uploadItems),
+            body: {
+              'name' : nameController.text.trim().toString(),
+              'rating' : ratingController.text.trim().toString() ,
+              'tags' : tagList.toString(),
+              'price' : priceController.text.trim().toString() ,
+              'sizes' :sizeList.toString()  ,
+              'colors' : colorList.toString() ,
+              'description':descriptionController.text.trim().toString() ,
+              'image': imageLink.toString(),
+            }
+          );
+
+          if(res.statusCode == 200){
+            var result = jsonDecode(res.body);
+
+            if(result['success'] == true){
+              Fluttertoast.showToast( msg: result['message']);
+            }else{
+              Fluttertoast.showToast( msg: result['message']);
+            }
+          }
+
+        }catch(e){
+          print("Error::" + e.toString());
+        }
+      }
 
       @override
       Widget build(BuildContext context) {

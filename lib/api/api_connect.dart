@@ -3,6 +3,7 @@ class API{
 
   static const USER_ENDPOINT ="$HOST_PATH/user";
   static const ADMIN_ENDPOINT ="$HOST_PATH/admin";
+  static const ITEMS_ENDPOINT ="$HOST_PATH/items";
 
   //sign up users
   static const signUp = "$USER_ENDPOINT/signup.php";
@@ -11,8 +12,20 @@ class API{
   //sign in users
   static const login = "$USER_ENDPOINT/login.php";
 
-  //sign in users
+  //sign in admin
   static const adminLogin = "$ADMIN_ENDPOINT/login.php";
 
+  //upload items
+  static const uploadItems = "$ITEMS_ENDPOINT/upload.php";
+
+  static const clientImgurID = "Client-ID "+"b2138d35a146dec";
+
+  static const imgurURL = "https://api.imgur.com/3/image";
+
+
+  //Client ID:
+ // b2138d35a146dec
+  //Client secret:
+  //36b832aa2f40886e366951ea2cabd4cd6c6f280e
 
 }
