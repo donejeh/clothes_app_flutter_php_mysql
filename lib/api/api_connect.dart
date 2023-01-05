@@ -1,5 +1,5 @@
 class API{
-  static const HOST_PATH = "http://192.168.3.32/clothes/backend";
+  static const HOST_PATH = "http://192.168.3.32/backend";
 
   static const USER_ENDPOINT ="$HOST_PATH/user";
   static const ADMIN_ENDPOINT ="$HOST_PATH/admin";
