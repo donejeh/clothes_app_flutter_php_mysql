@@ -1,22 +1,25 @@
 class API{
-  static const HOST_PATH = "http://192.168.3.32/clothes_app";
+  static const HOST_PATH = "http://192.168.3.32/clothes/backend";
 
   static const USER_ENDPOINT ="$HOST_PATH/user";
   static const ADMIN_ENDPOINT ="$HOST_PATH/admin";
   static const ITEMS_ENDPOINT ="$HOST_PATH/items";
+  static const CLOTHES_ENDPOINT ="$HOST_PATH/clothes";
 
   //sign up users
   static const signUp = "$USER_ENDPOINT/signup.php";
   static const validate_email = "$USER_ENDPOINT/validate_email.php";
-
-  //sign in users
   static const login = "$USER_ENDPOINT/login.php";
+
 
   //sign in admin
   static const adminLogin = "$ADMIN_ENDPOINT/login.php";
 
   //upload items
   static const uploadItems = "$ITEMS_ENDPOINT/upload.php";
+
+  //Clothers
+  static const getRatedClothes = "$CLOTHES_ENDPOINT/trending.php";
 
   static const clientImgurID = "Client-ID "+"b2138d35a146dec";
 

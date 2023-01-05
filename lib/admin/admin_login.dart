@@ -1,18 +1,13 @@
 import 'dart:convert';
-import 'dart:math';
-import 'dart:developer';
+
 
 import 'package:clothes/admin/admin_upload_items.dart';
 import 'package:clothes/users/authentication/login_screen.dart';
-import 'package:clothes/users/authentication/signup_screen.dart';
-import 'package:clothes/users/fragments/dashboard_of_fragments.dart';
-import 'package:clothes/users/userPreferences/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:clothes/api/api_connect.dart';
-import 'package:clothes/users/model/user.dart';
 
 class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({Key? key}) : super(key: key);
@@ -47,7 +42,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           Fluttertoast.showToast( msg: 'Login Successfully');
 
           Future.delayed(const Duration(microseconds: 2000),(){
-            Get.to(AdminUploadItemsScreen());
+            Get.to(const AdminUploadItemsScreen());
           });
         }else{
           Fluttertoast.showToast( msg: 'Username or password is incorrect');
@@ -75,7 +70,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                 child: Column(
                   children: [
                     //login scrreb header
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: 285,
                       child: Image.asset("images/admin.jpg"),
@@ -276,7 +271,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        Get.to(LoginScreen()
+                                        Get.to(const LoginScreen()
                                         );
 
                                       },

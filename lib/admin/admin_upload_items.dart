@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:clothes/admin/admin_login.dart';
 import 'package:clothes/api/api_connect.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,7 +17,7 @@ import 'package:http/http.dart' as http;
     
     class _AdminUploadItemsScreenState extends State<AdminUploadItemsScreen> {
 
-      ImagePicker _picker = ImagePicker();
+      final ImagePicker _picker = ImagePicker();
       XFile? pickedImageXFile;
 
       var formKey = GlobalKey<FormState>();
@@ -718,7 +717,7 @@ import 'package:http/http.dart' as http;
 
       Map<String, dynamic> jsonResponse = jsonDecode(responseDataFromImgurApi);
       imageLink = (jsonResponse["data"]["link"]).toString();
-      String deletehash = (jsonResponse["data"]["deletehash"]).toString();
+      //String deletehash = (jsonResponse["data"]["deletehash"]).toString();
 
       saveItemInfo();
 
