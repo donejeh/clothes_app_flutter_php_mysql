@@ -1,5 +1,5 @@
 class API{
-  static const HOST_PATH = "http://192.168.3.32/backend";
+  static const HOST_PATH = "http://192.168.3.32/clothes/backend";
 
   static const USER_ENDPOINT ="$HOST_PATH/user";
   static const ADMIN_ENDPOINT ="$HOST_PATH/admin";
@@ -20,6 +20,7 @@ class API{
 
   //Clothers
   static const getRatedClothes = "$CLOTHES_ENDPOINT/trending.php";
+  static const getAllClothes = "$CLOTHES_ENDPOINT/all.php";
 
   static const clientImgurID = "Client-ID "+"b2138d35a146dec";
 

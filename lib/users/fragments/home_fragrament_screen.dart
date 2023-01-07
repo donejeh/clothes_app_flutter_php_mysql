@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:clothes/users/item/item_details_screen.dart';
 import 'package:clothes/users/model/Clothes.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -13,6 +15,8 @@ class HomeFragmentScreen extends StatelessWidget {
 
   final TextEditingController searchController = TextEditingController();
 
+
+  //get all popular or trending items/product
   Future<List<Clothes>> getTrendingClothItems() async{
 
     List<Clothes> trendingClothItemList = [];
@@ -43,6 +47,35 @@ class HomeFragmentScreen extends StatelessWidget {
     return trendingClothItemList;
   }
 
+  Future<List<Clothes>> getAllClothItems() async{
+
+    List<Clothes> allClothItemList = [];
+
+    try{
+
+      var res = await http.post(
+        Uri.parse(API.getAllClothes),
+      );
+
+      if(res.statusCode == 200){
+        var responseBodyOfAllItems = jsonDecode(res.body);
+
+
+        if(responseBodyOfAllItems["success"]==true){
+          (responseBodyOfAllItems["clothItemsData"] as List).forEach((eachRecord) {
+            allClothItemList.add(Clothes.fromJson(eachRecord));
+          });
+        }
+
+      }else{
+        Fluttertoast.showToast(msg: "Error on the server");
+      }
+
+    }catch(e){
+      print("Error::"+ e.toString());
+    }
+    return allClothItemList;
+  }
 
 
   @override
@@ -70,7 +103,7 @@ class HomeFragmentScreen extends StatelessWidget {
           trendingMostPopularClothesItemWidget(context),
 
           const SizedBox(height: 16,),
-          //all new Colloection Items
+          //all new Collection Items
           const Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Text(
@@ -81,7 +114,8 @@ class HomeFragmentScreen extends StatelessWidget {
                 fontSize: 24,
               ),
             ),
-          )
+          ),
+          allItemsWidget(context),
         ],
       ),
     );
@@ -148,6 +182,7 @@ class HomeFragmentScreen extends StatelessWidget {
     );
   }
 
+  //popular clother
   Widget trendingMostPopularClothesItemWidget(context){
     return FutureBuilder(
         future: getTrendingClothItems(),
@@ -182,6 +217,8 @@ class HomeFragmentScreen extends StatelessWidget {
 
                     return GestureDetector(
                       onTap: (){
+
+                        Get.to(ItemDetailsScreen(itemInfo: eachClothItemData));
 
                       },
                       child: Container(
@@ -269,9 +306,9 @@ class HomeFragmentScreen extends StatelessWidget {
                                     children: [
                                       //rating star and rating number
                                       RatingBar.builder(
-                                          initialRating: eachClothItemData.rating!,
-                                          minRating: 1,
-                                          direction: Axis.horizontal,
+                                        initialRating: eachClothItemData.rating!,
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
                                         allowHalfRating: true,
                                         itemCount: 5,
                                         itemBuilder: (BuildContext context, int index) =>
@@ -318,4 +355,157 @@ class HomeFragmentScreen extends StatelessWidget {
         },
     );
   }
+
+  Widget allItemsWidget(context){
+
+  return FutureBuilder(
+      future: getAllClothItems(),
+      builder: (context, AsyncSnapshot<List<Clothes>> dataSnapShot) {
+        //check of we have network
+        if (dataSnapShot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        //check if data is empty
+        if (dataSnapShot.data == null) {
+          return const Center(
+            child: Text(
+                "No item found"
+            ),
+          );
+        }
+
+
+        if(dataSnapShot.data!.length > 0){
+
+          return ListView.builder(
+              itemCount: dataSnapShot.data!.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context,index){
+                Clothes eachClothItemRecord = dataSnapShot.data![index];
+
+                return GestureDetector(
+                  onTap: (){
+                    Get.to(ItemDetailsScreen(itemInfo: eachClothItemRecord));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(
+                      16,
+                        index == 0 ? 16 : 8 ,
+                      16,
+                      index == dataSnapShot.data!.length - 1 ? 16 : 8 ,
+                    ),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.black,
+                        boxShadow: const [
+                          BoxShadow(
+                            offset: Offset(0,0),
+                            blurRadius: 6,
+                            color: Colors.grey,
+                          ),
+                        ]
+
+                    ),
+                    child: Row(
+                      children: [
+                        //name + price + tags
+                        Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //name and price
+                                  Row(
+                                    children: [
+                                      //name
+                                      Expanded(
+                                        child: Text(
+                                          eachClothItemRecord.name!,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: Colors.grey,
+                                          ),
+                                      ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left:12,right: 12),
+                                        child: Text(
+                                          "₦"+eachClothItemRecord.price.toString(),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: Colors.purpleAccent,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16,),
+                                  Text(
+                                    "Tags: \n "+eachClothItemRecord.tags.toString().replaceAll("[", "").replaceAll("]", ""),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+
+                    ),
+                        ),
+
+                        //images clothes
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            bottomRight: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                          child: FadeInImage(
+                            height: 130,
+                            width: 130,
+                            fit: BoxFit.cover,
+                            placeholder: const AssetImage("images/place_holder.png"),
+                            image: NetworkImage(
+                              eachClothItemRecord.image!,
+                            ),
+                            imageErrorBuilder: (context,error,stackTraceError){
+                              return const Center(
+                                child: Icon(
+                                  Icons.broken_image_outlined,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+          );
+        }
+        else {
+          return const Center(
+            child: Text("Empty, No data"),
+          );
+        }
+      }
+    );
+  }
+
 }

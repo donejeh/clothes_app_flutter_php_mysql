@@ -104,12 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             padding: const EdgeInsets.fromLTRB(30,30,30,8),
                             child: Column(
                               children: [
-                                const Text("Kexim",
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 26,
-                                  ),
-                                ),
+
                                 //this is our form with email password details
                                 Form(
                                   key: formKey,
@@ -275,6 +270,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                     const Text(
                                       "Dont't have an Account?",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold
+                                      ),
                                     ),
                                     TextButton(
                                       onPressed: () {
@@ -286,6 +286,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       "Register here",
                                       style: TextStyle(
                                         color: Colors.purpleAccent,
+
                                       ),
                                     ),
                                     ),
@@ -306,6 +307,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                     const Text(
                                       "Are you an Admin?",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold
+                                      ),
                                     ),
                                     TextButton(
                                       onPressed: () {
