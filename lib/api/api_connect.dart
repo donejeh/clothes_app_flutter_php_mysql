@@ -5,6 +5,7 @@ class API{
   static const ADMIN_ENDPOINT ="$HOST_PATH/admin";
   static const ITEMS_ENDPOINT ="$HOST_PATH/items";
   static const CLOTHES_ENDPOINT ="$HOST_PATH/clothes";
+  static const CART_ENDPOINT ="$HOST_PATH/cart";
 
   //sign up users
   static const signUp = "$USER_ENDPOINT/signup.php";
@@ -14,13 +15,21 @@ class API{
 
   //sign in admin
   static const adminLogin = "$ADMIN_ENDPOINT/login.php";
-
   //upload items
   static const uploadItems = "$ITEMS_ENDPOINT/upload.php";
 
   //Clothers
   static const getRatedClothes = "$CLOTHES_ENDPOINT/trending.php";
   static const getAllClothes = "$CLOTHES_ENDPOINT/all.php";
+
+  //cart endpoint
+  static const addToCard = "$CART_ENDPOINT/add.php";
+  static const getCartList = "$CART_ENDPOINT/read.php";
+  static const deleteItemFormCartList = "$CART_ENDPOINT/delete.php";
+  static const  updateItemInCartList = "$CART_ENDPOINT/update.php";
+
+
+
 
   static const clientImgurID = "Client-ID "+"b2138d35a146dec";
 

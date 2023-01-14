@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:clothes/users/cart/cart_list_screen.dart';
 import 'package:clothes/users/item/item_details_screen.dart';
 import 'package:clothes/users/model/Clothes.dart';
 import 'package:flutter/material.dart';
@@ -56,10 +57,8 @@ class HomeFragmentScreen extends StatelessWidget {
       var res = await http.post(
         Uri.parse(API.getAllClothes),
       );
-
       if(res.statusCode == 200){
         var responseBodyOfAllItems = jsonDecode(res.body);
-
 
         if(responseBodyOfAllItems["success"]==true){
           (responseBodyOfAllItems["clothItemsData"] as List).forEach((eachRecord) {
@@ -146,7 +145,7 @@ class HomeFragmentScreen extends StatelessWidget {
           ),
           suffixIcon: IconButton(
             onPressed: (){
-
+              Get.to(CartListScreen());
             },
             icon: const Icon(
               Icons.shopping_cart,
@@ -194,7 +193,7 @@ class HomeFragmentScreen extends StatelessWidget {
               );
           }
           
-          print(dataSnapShot.data);
+         // print(dataSnapShot.data);
 
           //check if data is empty
           if(dataSnapShot.data == null){
