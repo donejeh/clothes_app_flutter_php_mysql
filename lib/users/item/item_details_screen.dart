@@ -57,6 +57,36 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   }
 
+  validateFavorite() async{
+    
+    try{
+      var res =  await http.post(
+          Uri.parse(API.validateFavourite),
+          body: {
+            'user_id' : currentOnlineUser.user.user_id.toString(),
+            'item_id' : widget.itemInfo!.item_id.toString(),
+          }
+      );
+
+      if(res.statusCode == 200) {
+        var result = jsonDecode(res.body);
+
+        if (result['favouriteFound'] == true) {
+          Fluttertoast.showToast(msg: "Favourite Items Save successfully ");
+        }else{
+          Fluttertoast.showToast(msg: "Error: Saving Favourite items  ");
+        }
+      }else{
+        Fluttertoast.showToast(msg: "Status is not 200");
+      }
+
+
+    }catch(e){
+      print(e.toString());
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

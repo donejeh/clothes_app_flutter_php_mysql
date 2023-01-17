@@ -1,10 +1,9 @@
 <?php
 require_once "../db.php";
 
-$favourite_id   = $_POST['favourite_id'];
-//$cartID  = json_decode($_POST['cart_id']);
+$user_id  = $_POST['user_id'];
+$item_id  = $_POST['item_id'];
 
-//$ids = implode("','", $cartID);
 
 $query = "DELETE FROM favourite WHERE favourite_id ='$favourite_id'";
 
