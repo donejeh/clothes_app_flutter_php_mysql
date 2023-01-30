@@ -4,8 +4,6 @@ require_once "../db.php";
 $user_id  = $_POST['user_id'];
 $item_id  = $_POST['item_id'];
 
-
-
 $query = "INSERT INTO favourite SET user_id ='$user_id', item_id='$item_id'";
 
 $result = $con->query($query);

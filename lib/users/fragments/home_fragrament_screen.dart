@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:clothes/users/cart/cart_list_screen.dart';
 import 'package:clothes/users/item/item_details_screen.dart';
+import 'package:clothes/users/item/search_items.dart';
 import 'package:clothes/users/model/Clothes.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -122,7 +123,7 @@ class HomeFragmentScreen extends StatelessWidget {
 
 
   //search bar
-  showSearchBarWidget(){
+ Widget showSearchBarWidget(){
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18),
       child: TextFormField(
@@ -131,6 +132,8 @@ class HomeFragmentScreen extends StatelessWidget {
         decoration: InputDecoration(
           prefixIcon: IconButton(
             onPressed: (){
+
+              Get.to(SearchItems(typeKeywords: searchController.text));
 
             },
             icon: const Icon(

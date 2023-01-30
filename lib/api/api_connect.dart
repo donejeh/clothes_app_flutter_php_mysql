@@ -30,6 +30,7 @@ class API{
 
   //favourite
   static const  addFavourite = "$FAV_ENDPOINT/add.php";
+  static const  readFavourite = "$FAV_ENDPOINT/read.php";
   static const  deleteFavourite = "$FAV_ENDPOINT/delete.php";
   static const  validateFavourite = "$FAV_ENDPOINT/validate_favourite.php";
 

@@ -5,7 +5,7 @@ $user_id  = $_POST['user_id'];
 $item_id  = $_POST['item_id'];
 
 
-$query = "DELETE FROM favourite WHERE favourite_id ='$favourite_id'";
+$query = "DELETE FROM favourite WHERE user_id ='$user_id' AND item_id='$item_id'";
 
 $result = $con->query($query);
 

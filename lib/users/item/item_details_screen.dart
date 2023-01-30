@@ -57,7 +57,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   }
 
-  validateFavorite() async{
+  validateFavoriteList() async{
     
     try{
       var res =  await http.post(
@@ -72,9 +72,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         var result = jsonDecode(res.body);
 
         if (result['favouriteFound'] == true) {
-          Fluttertoast.showToast(msg: "Favourite Items Save successfully ");
+        //  Fluttertoast.showToast(msg: "Items is in favourite list");
+
+          itemDetailsController.setFavorite(result['favouriteFound']);
         }else{
-          Fluttertoast.showToast(msg: "Error: Saving Favourite items  ");
+         // Fluttertoast.showToast(msg: "Item is not in Favourite list");
+          itemDetailsController.setFavorite(false);
         }
       }else{
         Fluttertoast.showToast(msg: "Status is not 200");
@@ -87,6 +90,74 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   }
 
+
+  addItemToFavoriteList() async{
+
+    try{
+      var res =  await http.post(
+          Uri.parse(API.addFavourite),
+          body: {
+            'user_id' : currentOnlineUser.user.user_id.toString(),
+            'item_id' : widget.itemInfo!.item_id.toString(),
+          }
+      );
+
+      if(res.statusCode == 200) {
+        var result = jsonDecode(res.body);
+
+        if (result['success'] == true) {
+          Fluttertoast.showToast(msg: "Favourite Items Save successfully");
+
+          validateFavoriteList();
+        }else{
+          Fluttertoast.showToast(msg: "Item not save to Favourite list");
+        }
+      }else{
+        Fluttertoast.showToast(msg: "Status is not 200");
+      }
+    }catch(e){
+      print(e.toString());
+    }
+
+  }
+
+  deleteItemFromFavoriteList() async{
+
+    try{
+      var res =  await http.post(
+          Uri.parse(API.deleteFavourite),
+          body: {
+            'user_id' : currentOnlineUser.user.user_id.toString(),
+            'item_id' : widget.itemInfo!.item_id.toString(),
+          }
+      );
+
+      if(res.statusCode == 200) {
+        var result = jsonDecode(res.body);
+
+        if (result['success'] == true) {
+          Fluttertoast.showToast(msg: "Favourite Items deleted successfully");
+
+          validateFavoriteList();
+
+        }else{
+          Fluttertoast.showToast(msg: "Item not couldnt be deleted from list");
+        }
+      }else{
+        Fluttertoast.showToast(msg: "Status is not 200");
+      }
+    }catch(e){
+      print(e.toString());
+    }
+
+  }
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  validateFavoriteList();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,9 +216,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
                         if(itemDetailsController.isFavorite){
 
+                          //delete items from favorite list
+                          deleteItemFromFavoriteList();
+
                         }else{
 
                           //save items to User favorites
+                          addItemToFavoriteList();
 
                         }
 
@@ -163,7 +238,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       Get.to(CartListScreen());
                     },
                     icon: Icon(
-                      Icons.arrow_back,
+                      Icons.shopping_cart,
                       color: Colors.purpleAccent,
                     ),
 

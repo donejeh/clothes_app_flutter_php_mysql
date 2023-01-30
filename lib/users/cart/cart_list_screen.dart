@@ -51,7 +51,7 @@ class _CartListScreenState extends State<CartListScreen> {
         }
         else
         {
-          Fluttertoast.showToast(msg: "Error Occurred while executing query");
+          Fluttertoast.showToast(msg: "Your cart is empty");
         }
 
         cartListController.setList(cartListOfCurrentUser);
