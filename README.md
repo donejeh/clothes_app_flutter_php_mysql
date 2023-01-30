@@ -1,16 +1,18 @@
-# clothes
+# clothes Ecommerce fluter application
 
-small ecommerce system
+Small ecommerce flutter application with payment gateway and alot of functionalities.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is a starting point for a Flutter application , php and mysql database.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+![Alt text](images/1675083842810.jpg?raw=true "Title")
+![Alt text](1675083842739.jpg?raw=true "Title")
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Alt text](images/1675083843026.jpg?raw=true "Title")
+![Alt text](images/1675083842951.jpg?raw=true "Title")
+
+
+![Alt text](images/1675083842880.jpg?raw=true "Title")
+

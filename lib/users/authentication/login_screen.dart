@@ -85,6 +85,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     //login screen sign-in form
 
+                    const Text("Shopping App PHP/FLUTTER",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 26,
+                      ),
+                    ),
+
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Container(

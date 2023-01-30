@@ -110,7 +110,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
 
 
-                    const Text("Kexim Bank",
+                    const Text("Shopping App PHP/FLUTTER",
                       style: TextStyle(
                         color: Colors.green,
                         fontSize: 26,
