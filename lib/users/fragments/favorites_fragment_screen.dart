@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:clothes/api/api_connect.dart';
+import 'package:clothes/users/model/Clothes.dart';
 import 'package:clothes/users/model/favorite.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -128,10 +129,21 @@ class FavoritesFragmentScreen extends StatelessWidget {
                scrollDirection: Axis.vertical,
                itemBuilder: (context,index){
                  Favorite eachFavoriteItemRecord = dataSnapShot.data![index];
+                 Clothes clickedlotheItem = Clothes(
+                   item_id: eachFavoriteItemRecord.item_id,
+                   image: eachFavoriteItemRecord.image,
+                   description: eachFavoriteItemRecord.description,
+                   colors: eachFavoriteItemRecord.colors,
+                   price: eachFavoriteItemRecord.price,
+                   tags: eachFavoriteItemRecord.tags,
+                   rating: eachFavoriteItemRecord.rating,
+                   name: eachFavoriteItemRecord.name,
+                   sizes: eachFavoriteItemRecord.sizes
+                 );
 
                  return GestureDetector(
                    onTap: (){
-                     // Get.to(ItemDetailsScreen(itemInfo: eachFavoriteItemRecord));
+                      Get.to(ItemDetailsScreen(itemInfo: clickedlotheItem));
                    },
                    child: Container(
                      margin: EdgeInsets.fromLTRB(

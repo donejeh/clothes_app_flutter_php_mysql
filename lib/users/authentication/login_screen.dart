@@ -27,40 +27,34 @@ class _LoginScreenState extends State<LoginScreen> {
   var isObsecure = true.obs;
 
   loginUserNow() async {
-
-    try{
-
+    try {
       var res = await http.post(
         Uri.parse(API.login),
         body: {
-          'user_email':emailController.text.trim(),
-          'user_password':passwordController.text.trim(),
+          'user_email': emailController.text.trim(),
+          'user_password': passwordController.text.trim(),
         },
       );
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         var result = jsonDecode(res.body);
 
-        if(result['success']==true){
+        if (result['success'] == true) {
+          Fluttertoast.showToast(msg: 'Login Successfully');
 
-          Fluttertoast.showToast( msg: 'Login Successfully');
-        
           User userInfo = User.fromJson(result["userData"]);
           RememberUserPrefs.storeUserInfo(userInfo);
-        //  Get.to(DashboardOfFragments())
+          //  Get.to(DashboardOfFragments())
           print(result);
-          Future.delayed(const Duration(microseconds: 2000),(){
+          Future.delayed(const Duration(microseconds: 2000), () {
             Get.to(DashboardOfFragments());
           });
-        }else{
-          Fluttertoast.showToast( msg: 'Error in login');
-
+        } else {
+          Fluttertoast.showToast(msg: 'Error in login');
         }
       }
-
-      }catch(e){
-     // log(e.toString());
+    } catch (e) {
+      // log(e.toString());
     }
-
   }
 
   @override
@@ -85,7 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     //login screen sign-in form
 
-                    const Text("Shopping App PHP/FLUTTER",
+                    const Text(
+                      "Shopping App PHP/FLUTTER",
                       style: TextStyle(
                         color: Colors.green,
                         fontSize: 26,
@@ -108,10 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(30,30,30,8),
+                            padding: const EdgeInsets.fromLTRB(30, 30, 30, 8),
                             child: Column(
                               children: [
-
                                 //this is our form with email password details
                                 Form(
                                   key: formKey,
@@ -124,131 +118,135 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ? "PLease email addesss"
                                             : null,
                                         decoration: InputDecoration(
-                                            prefixIcon: const Icon(
-                                              Icons.email,
-                                              color: Colors.black,
+                                          prefixIcon: const Icon(
+                                            Icons.email,
+                                            color: Colors.black,
+                                          ),
+                                          hintText: "Email ...",
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white,
                                             ),
-                                            hintText: "Email ...",
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(30),
-                                                borderSide: const BorderSide(
-                                                  color: Colors.white,
-                                                ),
-                                            ),
+                                          ),
                                           enabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(30),
+                                                BorderRadius.circular(30),
                                             borderSide: const BorderSide(
                                               color: Colors.white,
                                             ),
                                           ),
                                           focusedBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(30),
+                                                BorderRadius.circular(30),
                                             borderSide: const BorderSide(
                                               color: Colors.white,
                                             ),
                                           ),
                                           disabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(30),
+                                                BorderRadius.circular(30),
                                             borderSide: const BorderSide(
                                               color: Colors.white,
                                             ),
                                           ),
-                                          contentPadding: const EdgeInsets.symmetric(
-                                            horizontal: 14,
-                                            vertical: 6
-                                          ),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 14, vertical: 6),
                                           fillColor: Colors.white,
                                           filled: true,
                                         ),
                                       ),
 
-                                     const SizedBox(height: 18,),
+                                      const SizedBox(
+                                        height: 18,
+                                      ),
 
-                                     // for password text field
+                                      // for password text field
 
-                                     Obx(() =>
-                                         TextFormField(
-                                           controller: passwordController,
-                                           obscureText: isObsecure.value,
-                                           validator: (val) => val == ""
-                                               ? "Please enter password"
-                                               : null,
-                                           decoration: InputDecoration(
-                                             prefixIcon: const Icon(
-                                               Icons.vpn_key_sharp,
-                                               color: Colors.black,
-                                             ),
-                                             suffixIcon: Obx(
-                                                   () => GestureDetector(
-                                                 onTap: (){
-                                                   isObsecure.value = !isObsecure.value;
-                                                 },
-                                                 child: Icon(
-                                                   isObsecure.value ? Icons.visibility_off : Icons.visibility,
-                                                   color: Colors.black,
-                                                 ),
-                                               ),
-                                             ),
-                                             hintText: "Password ...",
-                                             border: OutlineInputBorder(
-                                               borderRadius:
-                                               BorderRadius.circular(30),
-                                               borderSide: const BorderSide(
-                                                 color: Colors.white,
-                                               ),
-                                             ),
-                                             enabledBorder: OutlineInputBorder(
-                                               borderRadius:
-                                               BorderRadius.circular(30),
-                                               borderSide: const BorderSide(
-                                                 color: Colors.white,
-                                               ),
-                                             ),
-                                             focusedBorder: OutlineInputBorder(
-                                               borderRadius:
-                                               BorderRadius.circular(30),
-                                               borderSide: const BorderSide(
-                                                 color: Colors.white,
-                                               ),
-                                             ),
-                                             disabledBorder: OutlineInputBorder(
-                                               borderRadius:
-                                               BorderRadius.circular(30),
-                                               borderSide: const BorderSide(
-                                                 color: Colors.white,
-                                               ),
-                                             ),
-                                             contentPadding: const EdgeInsets.symmetric(
-                                                 horizontal: 14,
-                                                 vertical: 6
-                                             ),
-                                             fillColor: Colors.white,
-                                             filled: true,
-                                           ),
-                                         ),
+                                      Obx(
+                                        () => TextFormField(
+                                          controller: passwordController,
+                                          obscureText: isObsecure.value,
+                                          validator: (val) => val == ""
+                                              ? "Please enter password"
+                                              : null,
+                                          decoration: InputDecoration(
+                                            prefixIcon: const Icon(
+                                              Icons.vpn_key_sharp,
+                                              color: Colors.black,
+                                            ),
+                                            suffixIcon: Obx(
+                                              () => GestureDetector(
+                                                onTap: () {
+                                                  isObsecure.value =
+                                                      !isObsecure.value;
+                                                },
+                                                child: Icon(
+                                                  isObsecure.value
+                                                      ? Icons.visibility_off
+                                                      : Icons.visibility,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                            hintText: "Password ...",
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              borderSide: const BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              borderSide: const BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              borderSide: const BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            disabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              borderSide: const BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 14,
+                                                    vertical: 6),
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                          ),
+                                        ),
+                                      ),
 
-                                     ),
-
-                                      const SizedBox(height: 18,),
+                                      const SizedBox(
+                                        height: 18,
+                                      ),
 
                                       // button input
                                       Material(
                                         color: Colors.black,
                                         borderRadius: BorderRadius.circular(30),
                                         child: InkWell(
-                                          onTap: (){
-
-                                            if(formKey.currentState!.validate()){
-
+                                          onTap: () {
+                                            if (formKey.currentState!
+                                                .validate()) {
                                               loginUserNow();
                                             }
-
                                           },
-                                          borderRadius: BorderRadius.circular(30),
+                                          borderRadius:
+                                              BorderRadius.circular(30),
                                           child: const Padding(
                                             padding: EdgeInsets.symmetric(
                                               vertical: 10,
@@ -265,37 +263,32 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       )
                                     ],
-                         ),
+                                  ),
                                 ),
-                              const SizedBox(
-                                height: 16,
-                              ),
+                                const SizedBox(
+                                  height: 16,
+                                ),
                                 // dont have account button form here
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-
                                     const Text(
                                       "Dont't have an Account?",
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold
-                                      ),
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        Get.to(SignupScreen()
-                                        );
-
-                                    },
+                                        Get.to(SignupScreen());
+                                      },
                                       child: const Text(
-                                      "Register here",
-                                      style: TextStyle(
-                                        color: Colors.purpleAccent,
-
+                                        "Register here",
+                                        style: TextStyle(
+                                          color: Colors.purpleAccent,
+                                        ),
                                       ),
-                                    ),
                                     ),
                                   ],
                                 ),
@@ -311,18 +304,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-
                                     const Text(
                                       "Are you an Admin?",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 15,
-                                          fontWeight: FontWeight.bold
-                                      ),
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                      Get.to(AdminLoginScreen());
+                                        Get.to(AdminLoginScreen());
                                       },
                                       child: const Text(
                                         "Click here",
@@ -333,7 +324,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ],
                                 ),
-
                               ],
                             ),
                           )),

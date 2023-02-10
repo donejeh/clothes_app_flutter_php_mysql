@@ -1,7 +1,7 @@
 <?php
 require_once "../db.php";
 
-$search  = $_POST['search'];
+$search  = $_POST['typeKeywords'];
 
 
 
@@ -13,10 +13,10 @@ if($query->num_rows > 0){
 
     while($row = $query->fetch_assoc()){
 
-        $userDetails[] = $row;
+        $data[] = $row;
     }
 
-    echo json_encode(array("success"=> true, "userData"=> $userDetails[0]));
+    echo json_encode(array("success"=> true, "data"=> $data));
 
 }else{
     echo json_encode(array("success"=> false));

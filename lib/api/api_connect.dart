@@ -17,6 +17,7 @@ class API{
   static const adminLogin = "$ADMIN_ENDPOINT/login.php";
   //upload items
   static const uploadItems = "$ITEMS_ENDPOINT/upload.php";
+  static const searchItems = "$ITEMS_ENDPOINT/search.php";
 
   //Clothers
   static const getRatedClothes = "$CLOTHES_ENDPOINT/trending.php";

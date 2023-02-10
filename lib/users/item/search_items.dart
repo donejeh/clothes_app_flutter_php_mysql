@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
+import '../../api/api_connect.dart';
 import '../cart/cart_list_screen.dart';
+import '../model/Clothes.dart';
+import '../model/item.dart';
+import 'item_details_screen.dart';
 
 class SearchItems extends StatefulWidget {
 
@@ -16,6 +23,53 @@ class SearchItems extends StatefulWidget {
 class _SearchItemsState extends State<SearchItems> {
 
   final TextEditingController searchController = TextEditingController();
+
+
+  Future<List<Clothes>> readSearchRecordsFound() async {
+
+    List<Clothes> clothesSearchList = [];
+
+    if(searchController.text != ""){
+
+
+      try{
+        var res = await http.post(
+            Uri.parse(API.searchItems),
+            body: {
+              "typeKeywords" : searchController.text.toString()
+            }
+        );
+
+        if (res.statusCode == 200)
+        {
+
+          var responseBodyOfGetCurrentUserFavoriteItems = jsonDecode(res.body);
+
+          if (responseBodyOfGetCurrentUserFavoriteItems['success'] == true)
+          {
+            (responseBodyOfGetCurrentUserFavoriteItems['data'] as List).forEach((eachCurrentFavoriteItemData)
+            {
+              clothesSearchList.add(Clothes.fromJson(eachCurrentFavoriteItemData));
+            });
+          }
+          else
+          {
+            Fluttertoast.showToast(msg: "Error Occurred while executing query");
+          }
+        }
+        else
+        {
+          Fluttertoast.showToast(msg: "Status Code is not 200");
+        }
+
+      }catch(e){
+        debugPrint(e.toString());
+      }
+
+    }
+
+    return clothesSearchList;
+  }
 
 
   @override
@@ -43,6 +97,7 @@ class _SearchItemsState extends State<SearchItems> {
           ),
         ),
       ),
+      body: searchItemsWidget(context),
     );
   }
 
@@ -57,7 +112,9 @@ class _SearchItemsState extends State<SearchItems> {
           prefixIcon: IconButton(
             onPressed: (){
 
-             // Get.to(SearchItems(typeKeywords: searchController.text));
+              setState(() {
+
+              });
 
             },
             icon: const Icon(
@@ -72,10 +129,14 @@ class _SearchItemsState extends State<SearchItems> {
           ),
           suffixIcon: IconButton(
             onPressed: (){
-              Get.to(CartListScreen());
+            searchController.clear();
+
+            setState(() {
+
+            });
             },
             icon: const Icon(
-              Icons.shopping_cart,
+              Icons.close,
               color: Colors.purpleAccent,
             ),
           ),
@@ -107,5 +168,159 @@ class _SearchItemsState extends State<SearchItems> {
       ),
     );
   }
+
+  Widget searchItemsWidget(context){
+
+    return FutureBuilder(
+        future: readSearchRecordsFound(),
+        builder: (context, AsyncSnapshot<List<Clothes>> dataSnapShot) {
+          //check of we have network
+          if (dataSnapShot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          //check if data is empty
+          if (dataSnapShot.data == null) {
+            return const Center(
+              child: Text(
+                  "No item found"
+              ),
+            );
+          }
+
+
+          if(dataSnapShot.data!.length > 0){
+
+            return ListView.builder(
+              itemCount: dataSnapShot.data!.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context,index){
+                Clothes eachClothItemRecord = dataSnapShot.data![index];
+
+                return GestureDetector(
+                  onTap: (){
+                    Get.to(ItemDetailsScreen(itemInfo: eachClothItemRecord));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(
+                      16,
+                      index == 0 ? 16 : 8 ,
+                      16,
+                      index == dataSnapShot.data!.length - 1 ? 16 : 8 ,
+                    ),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.black,
+                        boxShadow: const [
+                          BoxShadow(
+                            offset: Offset(0,0),
+                            blurRadius: 6,
+                            color: Colors.grey,
+                          ),
+                        ]
+
+                    ),
+                    child: Row(
+                      children: [
+                        //name + price + tags
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //name and price
+                                Row(
+                                  children: [
+                                    //name
+                                    Expanded(
+                                      child: Text(
+                                        eachClothItemRecord.name!,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left:12,right: 12),
+                                      child: Text(
+                                        "₦"+eachClothItemRecord.price.toString(),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Colors.purpleAccent,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16,),
+                                Text(
+                                  "Tags: \n "+eachClothItemRecord.tags.toString().replaceAll("[", "").replaceAll("]", ""),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+
+                              ],
+                            ),
+
+                          ),
+                        ),
+
+                        //images clothes
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            bottomRight: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                          child: FadeInImage(
+                            height: 130,
+                            width: 130,
+                            fit: BoxFit.cover,
+                            placeholder: const AssetImage("images/place_holder.png"),
+                            image: NetworkImage(
+                              eachClothItemRecord.image!,
+                            ),
+                            imageErrorBuilder: (context,error,stackTraceError){
+                              return const Center(
+                                child: Icon(
+                                  Icons.broken_image_outlined,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+          else {
+            return const Center(
+              child: Text("Empty, No data"),
+            );
+          }
+        }
+    );
+  }
+
+
 
 }
